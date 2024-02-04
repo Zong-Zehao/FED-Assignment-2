@@ -69,14 +69,20 @@
     </div>
   </div>
   <script>
-    // Function to fetch and display a random song
+    // Maintain a list of previously played track IDs
+    const playedTrackIds = [];
+
+    // Function to fetch and display a random English song
     async function getRandomSong() {
       try {
-        // Get a list of track IDs from the Deezer API
-        const trackIds = await fetchRandomTrackIds();
+        // Get a list of track IDs from the Deezer API - Search for English songs
+        const trackIds = await fetchEnglishTrackIds();
 
-        // Get a random track ID
-        const randomTrackId = getRandomTrackId(trackIds);
+        // Get a random track ID that hasn't been played before
+        const randomTrackId = getRandomUnplayedTrackId(trackIds);
+
+        // Add the new track ID to the list of played tracks
+        playedTrackIds.push(randomTrackId);
 
         // Replace %7Bid%7D in the URL with the random track ID
         const url = `https://deezerdevs-deezer.p.rapidapi.com/track/${randomTrackId}`;
@@ -86,8 +92,8 @@
           method: 'GET',
           headers: {
             'X-RapidAPI-Key': '57c85ed06fmsh39d26ca54fd5307p130ecejsn6bd33960a5cb',
-            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
-          }
+            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+          },
         });
 
         // Parse the JSON response
@@ -102,7 +108,7 @@
 
         // Display an audio player for the song preview
         document.getElementById('audio-player').innerHTML = `
-          <audio controls crossorigin="anonymous">
+          <audio controls>
             <source src="${result.preview}" type="audio/mp3">
             Your browser does not support the audio tag.
           </audio>
@@ -112,17 +118,17 @@
       }
     }
 
-    // Function to fetch a list of track IDs from the Deezer API
-    async function fetchRandomTrackIds() {
+    // Function to fetch a list of track IDs from the Deezer API - Search for English songs
+    async function fetchEnglishTrackIds() {
       try {
-        const url = "https://deezerdevs-deezer.p.rapidapi.com/search?q=random";
+        const url = 'https://deezerdevs-deezer.p.rapidapi.com/search?q=english';
 
         const response = await fetch(url, {
           method: 'GET',
           headers: {
             'X-RapidAPI-Key': '57c85ed06fmsh39d26ca54fd5307p130ecejsn6bd33960a5cb',
-            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
-          }
+            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com',
+          },
         });
 
         if (!response.ok) {
@@ -139,10 +145,19 @@
       }
     }
 
-    // Function to get a random track ID from the list
-    function getRandomTrackId(trackIds) {
-      const randomIndex = Math.floor(Math.random() * trackIds.length);
-      return trackIds[randomIndex];
+    // Function to get a random track ID that hasn't been played before
+    function getRandomUnplayedTrackId(trackIds) {
+      // Filter out track IDs that have already been played
+      const unplayedTrackIds = trackIds.filter(id => !playedTrackIds.includes(id));
+
+      if (unplayedTrackIds.length === 0) {
+        // If all tracks have been played, reset the playedTrackIds list
+        playedTrackIds.length = 0;
+      }
+
+      // Get a random track ID from the unplayed list
+      const randomIndex = Math.floor(Math.random() * unplayedTrackIds.length);
+      return unplayedTrackIds[randomIndex];
     }
 
     // Function to check the user's guess
