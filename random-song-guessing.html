@@ -72,8 +72,14 @@
     // Function to fetch and display a random song
     async function getRandomSong() {
       try {
-        // Replace %7Bid%7D in the URL with a random track ID
-        const url = "https://deezerdevs-deezer.p.rapidapi.com/chart/0/tracks";
+        // Get a list of track IDs from the Deezer API
+        const trackIds = await fetchRandomTrackIds();
+
+        // Get a random track ID
+        const randomTrackId = getRandomTrackId(trackIds);
+
+        // Replace %7Bid%7D in the URL with the random track ID
+        const url = `https://deezerdevs-deezer.p.rapidapi.com/track/${randomTrackId}`;
 
         // Make the API request
         const response = await fetch(url, {
@@ -87,26 +93,56 @@
         // Parse the JSON response
         const result = await response.json();
 
-        // Get a random track from the list
-        const randomTrack = result.data[Math.floor(Math.random() * result.data.length)];
-
         // Display relevant information for the user to guess
         document.getElementById('song-info').innerHTML = `
-          <p>Title: ${randomTrack.title}</p>
-          <p>Artist: ${randomTrack.artist.name}</p>
-          <p>Album: ${randomTrack.album.title}</p>
+          <p>Title: ${result.title}</p>
+          <p>Artist: ${result.artist.name}</p>
+          <p>Album: ${result.album.title}</p>
         `;
 
         // Display an audio player for the song preview
         document.getElementById('audio-player').innerHTML = `
           <audio controls crossorigin="anonymous">
-            <source src="${randomTrack.preview}" type="audio/mp3">
+            <source src="${result.preview}" type="audio/mp3">
             Your browser does not support the audio tag.
           </audio>
         `;
       } catch (error) {
         console.error(error);
       }
+    }
+
+    // Function to fetch a list of track IDs from the Deezer API
+    async function fetchRandomTrackIds() {
+      try {
+        const url = "https://deezerdevs-deezer.p.rapidapi.com/search?q=random";
+
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': '57c85ed06fmsh39d26ca54fd5307p130ecejsn6bd33960a5cb',
+            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch track IDs. Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        // Extract track IDs from the search results
+        return result.data?.map(track => track.id) || [];
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+    }
+
+    // Function to get a random track ID from the list
+    function getRandomTrackId(trackIds) {
+      const randomIndex = Math.floor(Math.random() * trackIds.length);
+      return trackIds[randomIndex];
     }
 
     // Function to check the user's guess
