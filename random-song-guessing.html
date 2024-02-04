@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deezer Genres</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #genreInput {
+            margin: 10px 0;
+            padding: 5px;
+        }
+
+        #searchButton {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Deezer Genres</h1>
+
+<input type="text" id="genreInput" placeholder="Enter Genre">
+<button id="searchButton">Search</button>
+
+<ul id="genreList"></ul>
+
+<script>
+  const url = 'https://deezerdevs-deezer.p.rapidapi.com/genre';
+  const genreListElement = document.getElementById('genreList');
+  const genreInput = document.getElementById('genreInput');
+  const searchButton = document.getElementById('searchButton');
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': '57c85ed06fmsh39d26ca54fd5307p130ecejsn6bd33960a5cb',
+      'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+    }
+  };
+
+  async function fetchSongsByGenre() {
+    const selectedGenre = genreInput.value;
+
+    try {
+      // Fetch genre data
+      const genreResponse = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/genre/${selectedGenre}`, options);
+
+      // Log the HTTP status code
+      console.log('Genre API Status Code:', genreResponse.status);
+
+      // Check if the response status is OK (200)
+      if (genreResponse.ok) {
+        const genreResult = await genreResponse.json();
+
+        // Log the entire genre API response
+        console.log('Genre API Response:', genreResult);
+
+        // Clear previous list
+        genreListElement.innerHTML = '';
+
+        // Check if genreResult.data is defined and is an array with at least one item
+        if (genreResult.data && Array.isArray(genreResult.data) && genreResult.data.length > 0) {
+          // List songs from the selected genre
+          genreResult.data.forEach(async song => {
+            const li = document.createElement('li');
+
+            // Add track details to the list item
+            li.innerHTML = `
+              <strong>Title:</strong> ${song.title} <br>
+              <strong>Artist:</strong> ${song.artist.name} <br>
+              <strong>Album:</strong> ${song.album.title}
+            `;
+
+            genreListElement.appendChild(li);
+          });
+        } else {
+          console.error('Invalid or empty response from the genre API');
+        }
+      } else {
+        console.error('Error:', genreResponse.status);
+      }
+    } catch (error) {
+      // Log any errors
+      console.error(error);
+    }
+  }
+
+  searchButton.addEventListener('click', fetchSongsByGenre);
+</script>
+
+</body>
+</html>
