@@ -133,9 +133,34 @@
         };
 
         const generateWrongOptions = (correctAnswer) => {
-            const wrongOption1 = "Wrong Option 1";
-            const wrongOption2 = "Wrong Option 2";
+            const wrongOption1 = generateFakeSongName();
+            const wrongOption2 = generateFakeSongName();
+            while (wrongOption1 === wrongOption2) {
+                // Ensure the wrong options are distinct
+                wrongOption2 = generateFakeSongName();
+            }
             return [wrongOption1, wrongOption2];
+        };
+
+        const generateFakeSongName = () => {
+            // Generate a random fake song name with diverse variations
+            const baseWords = ['Mystic', 'Eternal', 'Sonic', 'Harmonic', 'Whispering', 'Rhythmic'];
+            const prefixes = ['Enchanted', 'Celestial', 'Serenading', 'Astral', 'Melodic', 'Epic'];
+            const suffixes = ['Symphony', 'Melody', 'Harmony', 'Vibration', 'Sonata', 'Rhythm'];
+
+            const randomBase = baseWords[Math.floor(Math.random() * baseWords.length)];
+            const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+            const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+
+            const variations = [
+                `${randomBase} ${randomSuffix}`,
+                `${randomPrefix} ${randomBase}`,
+                `${randomBase} ${randomSuffix}`,
+                `${randomBase} & ${randomPrefix}`,
+                `${randomBase}'s ${randomSuffix}`
+            ];
+
+            return variations[Math.floor(Math.random() * variations.length)];
         };
 
         const shuffleArray = (array) => {
@@ -153,10 +178,12 @@
 
             if (sanitizedSelectedOption === sanitizedCorrectAnswer) {
                 resultDiv.innerHTML += '<p style="color: green;">Correct!</p>';
-                getRandomSong();
             } else {
-                resultDiv.innerHTML += '<p style="color: red;">Wrong! Try again.</p>';
+                resultDiv.innerHTML += '<p style="color: red;">Wrong!</p>';
             }
+
+            // Proceed to the next song
+            getRandomSong();
         };
     </script>
 </body>
