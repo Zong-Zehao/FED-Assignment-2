@@ -1,120 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deezer Genres</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
 
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
 
-        h1 {
-            color: #333;
-        }
+    h1 {
+      color: #333;
+    }
 
-        ul {
-            list-style: none;
-            padding: 0;
-        }
+    #song-info {
+      margin: 20px 0;
+    }
 
-        li {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            margin-bottom: 5px;
-            padding: 10px;
-            border-radius: 5px;
-        }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+    }
 
-        #genreInput {
-            margin: 10px 0;
-            padding: 5px;
-        }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-        #searchButton {
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-    </style>
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #audio-player {
+      margin-top: 20px;
+    }
+  </style>
+  <title>Guess the Song</title>
 </head>
+
 <body>
+  <div class="container">
+    <h1>Guess the Song</h1>
+    <div id="song-info">
+      <!-- Song information will be displayed here -->
+    </div>
+    <input type="text" id="user-guess" placeholder="Enter your guess">
+    <button onclick="checkGuess()">Submit Guess</button>
+    <div id="audio-player">
+      <!-- Audio player for the song preview will be displayed here -->
+    </div>
+  </div>
+  <script>
+    // Function to fetch and display a random song
+    async function getRandomSong() {
+      try {
+        // Replace %7Bid%7D in the URL with a random track ID
+        const url = "https://deezerdevs-deezer.p.rapidapi.com/chart/0/tracks";
 
-<h1>Deezer Genres</h1>
+        // Make the API request
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': '57c85ed06fmsh39d26ca54fd5307p130ecejsn6bd33960a5cb',
+            'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+          }
+        });
 
-<input type="text" id="genreInput" placeholder="Enter Genre">
-<button id="searchButton">Search</button>
+        // Parse the JSON response
+        const result = await response.json();
 
-<ul id="genreList"></ul>
+        // Get a random track from the list
+        const randomTrack = result.data[Math.floor(Math.random() * result.data.length)];
 
-<script>
-  const url = 'https://deezerdevs-deezer.p.rapidapi.com/genre';
-  const genreListElement = document.getElementById('genreList');
-  const genreInput = document.getElementById('genreInput');
-  const searchButton = document.getElementById('searchButton');
+        // Display relevant information for the user to guess
+        document.getElementById('song-info').innerHTML = `
+          <p>Title: ${randomTrack.title}</p>
+          <p>Artist: ${randomTrack.artist.name}</p>
+          <p>Album: ${randomTrack.album.title}</p>
+        `;
 
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Key': '57c85ed06fmsh39d26ca54fd5307p130ecejsn6bd33960a5cb',
-      'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
-    }
-  };
-
-  async function fetchSongsByGenre() {
-    const selectedGenre = genreInput.value;
-
-    try {
-      // Fetch genre data
-      const genreResponse = await fetch(`https://deezerdevs-deezer.p.rapidapi.com/genre/${selectedGenre}`, options);
-
-      // Log the HTTP status code
-      console.log('Genre API Status Code:', genreResponse.status);
-
-      // Check if the response status is OK (200)
-      if (genreResponse.ok) {
-        const genreResult = await genreResponse.json();
-
-        // Log the entire genre API response
-        console.log('Genre API Response:', genreResult);
-
-        // Clear previous list
-        genreListElement.innerHTML = '';
-
-        // Check if genreResult.data is defined and is an array with at least one item
-        if (genreResult.data && Array.isArray(genreResult.data) && genreResult.data.length > 0) {
-          // List songs from the selected genre
-          genreResult.data.forEach(async song => {
-            const li = document.createElement('li');
-
-            // Add track details to the list item
-            li.innerHTML = `
-              <strong>Title:</strong> ${song.title} <br>
-              <strong>Artist:</strong> ${song.artist.name} <br>
-              <strong>Album:</strong> ${song.album.title}
-            `;
-
-            genreListElement.appendChild(li);
-          });
-        } else {
-          console.error('Invalid or empty response from the genre API');
-        }
-      } else {
-        console.error('Error:', genreResponse.status);
+        // Display an audio player for the song preview
+        document.getElementById('audio-player').innerHTML = `
+          <audio controls crossorigin="anonymous">
+            <source src="${randomTrack.preview}" type="audio/mp3">
+            Your browser does not support the audio tag.
+          </audio>
+        `;
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      // Log any errors
-      console.error(error);
     }
-  }
 
-  searchButton.addEventListener('click', fetchSongsByGenre);
-</script>
+    // Function to check the user's guess
+    function checkGuess() {
+      const userGuess = document.getElementById('user-guess').value.toLowerCase();
+      // Assume that the correct answer is the title of the song
+      const correctAnswer = document.getElementById('song-info').querySelector('p:nth-child(1)').innerText.slice(7).toLowerCase();
 
+      if (userGuess === correctAnswer) {
+        alert('Congratulations! You guessed the correct song!');
+      } else {
+        alert(`Sorry, your guess is incorrect. The correct answer is: ${correctAnswer}`);
+      }
+
+      // Call the function again to fetch and display a new random song
+      getRandomSong();
+    }
+
+    // Call the function to fetch and display a random song when the page loads
+    getRandomSong();
+  </script>
 </body>
+
 </html>
