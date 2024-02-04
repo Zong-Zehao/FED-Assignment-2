@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Song Preview</title>
+    <title>Random Song Guessing Game</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -37,7 +37,7 @@
         }
 
         .option-button {
-            padding: 10px;
+            padding: 15px;
             cursor: pointer;
             background-color: #4CAF50;
             color: white;
@@ -49,7 +49,7 @@
         #retryButton,
         #backButton {
             margin-top: 20px;
-            padding: 10px;
+            padding: 15px;
             cursor: pointer;
             background-color: #333;
             color: white;
@@ -71,7 +71,7 @@
 </head>
 
 <body>
-    <h1>Random Song Preview</h1>
+    <h1>Random Song Guessing Game</h1>
     <p>Points: <span id="points">30</span></p>
     <p>Time: <span id="timer">30 Sec</span></p>
     <button id="getRandomSongBtn" onclick="getRandomSong()">Get Random Song</button>
@@ -84,17 +84,16 @@
     <script>
         let fetchingSong = false;
         let audioPlayer;
-        let currentTrackId;
-        let points = 30; // Initialize with 30 points
+        let previousTrackId;
+        let points = 30;
         let timer;
-        let startTime; // Variable to store the start time when displaying options
-        let desiredBackURL = "guess-the-artist's-song.html"; // Set the desired local file to go back to
-
-        const initialTime = 30; // 30 seconds to guess the song name
+        let startTime;
+        let desiredBackURL = "guess-the-artist's-song.html";
+        const initialTime = 30;
         let currentTime = initialTime;
 
         const getRandomTrackId = async () => {
-            const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/2249258602'; // Example playlist
+            const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/7785373782';
             const playlistOptions = {
                 method: 'GET',
                 headers: {
@@ -106,9 +105,9 @@
             try {
                 const response = await fetch(playlistUrl, playlistOptions);
                 const playlistData = await response.json();
-                const currentTrackIndex = playlistData.tracks.data.findIndex(track => track.id.toString() === currentTrackId);
+                const currentTrackIndex = playlistData.tracks.data.findIndex(track => track.id.toString() === previousTrackId);
                 const trackNames = playlistData.tracks.data
-                    .filter((_, index) => index !== currentTrackIndex) // Exclude the current track
+                    .filter((_, index) => index !== currentTrackIndex)
                     .map(track => track.title);
 
                 const randomIndex = Math.floor(Math.random() * trackNames.length);
@@ -135,10 +134,10 @@
                 if (result.data && result.data.length > 0) {
                     return {
                         title: result.data[0].title,
-                        preview: result.data[0].preview
+                        preview: result.data[0].preview,
+                        trackId: result.data[0].id.toString()
                     };
                 } else {
-                    // If no matching track found, recursively call to get another random song
                     return getTrackDetails(await getRandomTrackId());
                 }
             } catch (error) {
@@ -147,7 +146,8 @@
             }
         };
 
-        const displayResult = async (title, preview) => {
+        const displayResult = async (title, preview, trackId) => {
+            previousTrackId = trackId;
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = `
                 <h2>Song Playing</h2>
@@ -161,15 +161,14 @@
             const wrongOptions = await generateWrongOptions();
             const allOptions = shuffleArray([...wrongOptions, title]);
             optionsDiv.innerHTML = allOptions.map(option => `
-                <button class="option-button" onclick="checkAnswer('${encodeURIComponent(option)}', '${encodeURIComponent(title)}')" ${points <= 0 || currentTime <= 0 ? 'disabled' : ''}>${option}</button>
+                <button class="option-button" onclick="checkAnswer('${encodeURIComponent(option)}', '${encodeURIComponent(title)}')" ${points <= 0 || currentTime <= 0 || points >= 600 ? 'disabled' : ''}>${option}</button>
             `).join('');
 
             audioPlayer = document.getElementById('audioPlayer');
             startTimer();
-            startTime = new Date(); // Record the start time when displaying options
+            startTime = new Date();
 
-            // Pause audio and lock buttons if points are zero or time is up
-            if (points <= 0 || currentTime <= 0) {
+            if (points <= 0 || currentTime <= 0 || points >= 600) {
                 audioPlayer.pause();
                 document.getElementById('getRandomSongBtn').disabled = true;
                 document.getElementById('skipSongBtn').disabled = true;
@@ -177,20 +176,22 @@
                 document.getElementById('retryButton').style.display = 'block';
                 resetTimer();
             }
+
+            checkWinCondition();
         };
 
         const getRandomSong = async () => {
-            if (!fetchingSong && points > 0) {
+            if (!fetchingSong && points > 0 && points < 600) {
                 fetchingSong = true;
                 try {
                     resetTimer();
-                    currentTime = initialTime; // Reset the timer for each new song
+                    currentTime = initialTime;
                     updateTimerDisplay();
                     const trackName = await getRandomTrackId();
-                    const { title, preview } = await getTrackDetails(trackName);
-                    console.log('Fetched Song:', JSON.stringify(title)); // Log the fetched song title
+                    const { title, preview, trackId } = await getTrackDetails(trackName);
+                    console.log('Fetched Song:', JSON.stringify(title));
 
-                    displayResult(title, preview);
+                    displayResult(title, preview, trackId);
                 } catch (error) {
                     console.error(error);
                 } finally {
@@ -200,14 +201,13 @@
         };
 
         const skipSong = () => {
-            if (points > 0) {
+            if (points > 0 && points < 600) {
                 resetTimer();
                 getRandomSong();
             }
         };
 
         const retryGame = () => {
-            // Reset points and timer, enable options, hide retry button, and get a new random song
             points = 30;
             currentTime = initialTime;
             document.getElementById('points').textContent = points;
@@ -242,14 +242,13 @@
             const sanitizedSelectedOption = encodeURIComponent(selectedOption);
             const sanitizedCorrectAnswer = encodeURIComponent(correctAnswer);
 
-            const endTime = new Date(); // Record the end time when the user makes a selection
+            const endTime = new Date();
             const timeDifferenceInSeconds = Math.floor((endTime - startTime) / 1000);
 
             if (sanitizedSelectedOption === sanitizedCorrectAnswer) {
-                points += 30; // Add 30 points for correct answer
+                points += 30;
                 resultDiv.innerHTML += `<p style="color: green;">Correct! Earned 30 points.</p>`;
             } else {
-                // Subtract the time taken from the points for wrong answers
                 points = Math.max(0, points - timeDifferenceInSeconds);
                 resultDiv.innerHTML += `<p style="color: red;">Wrong! Deducted ${timeDifferenceInSeconds} points.</p>`;
             }
@@ -257,38 +256,38 @@
             pointsSpan.textContent = points;
 
             if (points <= 0 || currentTime <= 0) {
-                // Game over when points reach 0 or below or time is up
-                resultDiv.innerHTML += '<p style="color: red;">Uh oh, you have no more points or time is up. Game over!</p>';
-                stopGame();
+                stopGameAndShowLoss();
+            } else if (points >= 600) {
+                stopGameAndCongratulate();
             } else {
-                // Proceed to the next song
                 getRandomSong();
             }
         };
 
         const timePenalty = () => {
-            if (points > 0 && currentTime > 0) {
-                // Deduct 1 point every second
+            if (points > 0 && currentTime > 0 && points < 600) {
                 points = Math.max(0, points - 1);
                 document.getElementById('points').textContent = points;
             }
 
             if (points <= 0 || currentTime <= 0) {
-                // Stop the game when points reach 0 or below or time is up
-                stopGame();
+                stopGameAndShowLoss();
             }
         };
 
         const startTimer = () => {
             timer = setInterval(() => {
-                if (points > 0 && currentTime > 0) {
+                if (points > 0 && currentTime > 0 && points < 600) {
                     currentTime--;
                     updateTimerDisplay();
-                    timePenalty(); // Call timePenalty every second
+                    timePenalty();
                 } else {
-                    // Stop the game when time reaches zero
                     clearInterval(timer);
-                    stopGame();
+                    if (points <= 0) {
+                        stopGameAndShowLoss();
+                    } else {
+                        stopGameAndCongratulate();
+                    }
                 }
             }, 1000);
         };
@@ -298,12 +297,29 @@
         };
 
         const stopGame = () => {
-            // Lock options, buttons, and display retry button
             audioPlayer.pause();
             document.getElementById('getRandomSongBtn').disabled = true;
             document.getElementById('skipSongBtn').disabled = true;
             document.querySelectorAll('.option-button').forEach(button => button.disabled = true);
             document.getElementById('retryButton').style.display = 'block';
+        };
+
+        const stopGameAndCongratulate = () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p style="color: green;">Congratulations, you've won!</p>`;
+            stopGame();
+            document.getElementById('retryButton').style.display = 'block';
+            document.getElementById('getRandomSongBtn').disabled = true;
+            document.getElementById('skipSongBtn').disabled = true;
+        };
+
+        const stopGameAndShowLoss = () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p style="color: red;">Too Bad, You've Lost. Try Again?</p>`;
+            stopGame();
+            document.getElementById('retryButton').style.display = 'block';
+            document.getElementById('getRandomSongBtn').disabled = true;
+            document.getElementById('skipSongBtn').disabled = true;
         };
 
         const updateTimerDisplay = () => {
@@ -317,8 +333,13 @@
         };
 
         const goBack = () => {
-            // Navigate back to the desired local file
             window.location.href = desiredBackURL;
+        };
+
+        const checkWinCondition = () => {
+            if (points >= 600) {
+                stopGameAndCongratulate();
+            }
         };
     </script>
 </body>
