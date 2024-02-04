@@ -73,7 +73,7 @@
 <body>
     <h1>Random Song Preview</h1>
     <p>Points: <span id="points">30</span></p>
-    <p>Time: <span id="timer">1:30</span></p>
+    <p>Time: <span id="timer">30 Sec</span></p>
     <button id="getRandomSongBtn" onclick="getRandomSong()">Get Random Song</button>
     <button id="skipSongBtn" onclick="skipSong()">Skip</button>
     <div id="result"></div>
@@ -90,7 +90,7 @@
         let startTime; // Variable to store the start time when displaying options
         let desiredBackURL = "guess-the-artist's-song.html"; // Set the desired local file to go back to
 
-        const initialTime = 90; // 1 minute 30 seconds
+        const initialTime = 30; // 30 seconds to guess the song name
         let currentTime = initialTime;
 
         const getRandomTrackId = async () => {
@@ -150,7 +150,7 @@
         const displayResult = async (title, preview) => {
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = `
-                <h2>Song Title: ${title}</h2>
+                <h2>Song Playing</h2>
                 <audio controls autoplay crossorigin="anonymous" controlsList="nodownload" id="audioPlayer">
                     <source src="${preview}" type="audio/mp3">
                     Your browser does not support the audio element.
