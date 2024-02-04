@@ -6,34 +6,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Song Preview</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
+      body {
+          font-family: 'Arial', sans-serif;
+          text-align: center;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+      }
 
-        #result {
-            margin-top: 20px;
-        }
+      header {
+          background-color: #333;
+          color: #fff;
+          padding: 10px;
+          margin-bottom: 20px;
+      }
 
-        .options {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 10px;
-        }
+      #result {
+          margin-top: 20px;
+      }
 
-        .option-button {
-            padding: 10px;
-            cursor: pointer;
-        }
+      .options {
+          display: flex;
+          justify-content: space-around;
+          margin-top: 20px;
+      }
 
-        #retryButton {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            cursor: pointer;
-        }
-    </style>
+      .option-button {
+          padding: 10px;
+          cursor: pointer;
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          margin: 5px;
+      }
+
+      #retryButton,
+      #backButton {
+          margin-top: 20px;
+          padding: 10px;
+          cursor: pointer;
+          background-color: #333;
+          color: white;
+          border: none;
+          border-radius: 5px;
+      }
+
+      audio {
+          width: 100%;
+          max-width: 300px;
+          margin: 20px 0;
+      }
+
+      button:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+      }
+  </style>
 </head>
 
 <body>
@@ -44,6 +78,7 @@
     <div id="result"></div>
     <div class="options" id="options"></div>
     <button id="retryButton" onclick="retryGame()">Retry</button>
+    <button id="backButton" onclick="goBack()">Back</button>
 
     <script>
         let fetchingSong = false;
@@ -52,9 +87,10 @@
         let points = 30; // Initialize with 30 points
         let timer;
         let startTime; // Variable to store the start time when displaying options
+        let desiredBackURL = "guess-the-artist's-song.html"; // Set the desired local file to go back to
 
         const getRandomTrackId = async () => {
-            const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/3155776842'; // Example playlist
+            const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/2249258602'; // Example playlist
             const playlistOptions = {
                 method: 'GET',
                 headers: {
@@ -66,25 +102,21 @@
             try {
                 const response = await fetch(playlistUrl, playlistOptions);
                 const playlistData = await response.json();
-                const randomIndex = Math.floor(Math.random() * playlistData.tracks.data.length);
-                const newTrackId = playlistData.tracks.data[randomIndex].id.toString();
+                const currentTrackIndex = playlistData.tracks.data.findIndex(track => track.id.toString() === currentTrackId);
+                const trackNames = playlistData.tracks.data
+                    .filter((_, index) => index !== currentTrackIndex) // Exclude the current track
+                    .map(track => track.title);
 
-                // Ensure the newly fetched song is different from the current one
-                if (newTrackId !== currentTrackId) {
-                    currentTrackId = newTrackId;
-                    return currentTrackId;
-                } else {
-                    // If the new song is the same, recursively call to get another random song
-                    return getRandomTrackId();
-                }
+                const randomIndex = Math.floor(Math.random() * trackNames.length);
+                return trackNames[randomIndex];
             } catch (error) {
                 console.error(error);
                 throw error;
             }
         };
 
-        const getTrackDetails = async (trackId) => {
-            const trackUrl = `https://deezerdevs-deezer.p.rapidapi.com/track/${trackId}`;
+        const getTrackDetails = async (trackName) => {
+            const trackUrl = `https://deezerdevs-deezer.p.rapidapi.com/search?q=${encodeURIComponent(trackName)}`;
             const trackOptions = {
                 method: 'GET',
                 headers: {
@@ -96,17 +128,22 @@
             try {
                 const response = await fetch(trackUrl, trackOptions);
                 const result = await response.json();
-                return {
-                    title: result.title,
-                    preview: result.preview
-                };
+                if (result.data && result.data.length > 0) {
+                    return {
+                        title: result.data[0].title,
+                        preview: result.data[0].preview
+                    };
+                } else {
+                    // If no matching track found, recursively call to get another random song
+                    return getTrackDetails(await getRandomTrackId());
+                }
             } catch (error) {
                 console.error(error);
                 throw error;
             }
         };
 
-        const displayResult = (title, preview, options) => {
+        const displayResult = async (title, preview) => {
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = `
                 <h2>Song Title: ${title}</h2>
@@ -117,7 +154,9 @@
             `;
 
             const optionsDiv = document.getElementById('options');
-            optionsDiv.innerHTML = options.map(option => `
+            const wrongOptions = await generateWrongOptions();
+            const allOptions = shuffleArray([...wrongOptions, title]);
+            optionsDiv.innerHTML = allOptions.map(option => `
                 <button class="option-button" onclick="checkAnswer('${encodeURIComponent(option)}', '${encodeURIComponent(title)}')" ${points <= 0 ? 'disabled' : ''}>${option}</button>
             `).join('');
 
@@ -139,13 +178,11 @@
                 fetchingSong = true;
                 try {
                     resetTimer();
-                    const randomTrackId = await getRandomTrackId();
-                    const { title, preview } = await getTrackDetails(randomTrackId);
+                    const trackName = await getRandomTrackId();
+                    const { title, preview } = await getTrackDetails(trackName);
                     console.log('Fetched Song:', JSON.stringify(title)); // Log the fetched song title
 
-                    const wrongOptions = generateWrongOptions(title);
-                    const allOptions = shuffleArray([...wrongOptions, title]);
-                    displayResult(title, preview, allOptions);
+                    displayResult(title, preview);
                 } catch (error) {
                     console.error(error);
                 } finally {
@@ -172,35 +209,13 @@
             getRandomSong();
         };
 
-        const generateWrongOptions = (correctAnswer) => {
-            const wrongOption1 = generateFakeSongName();
-            const wrongOption2 = generateFakeSongName();
-            while (wrongOption1 === wrongOption2) {
-                // Ensure the wrong options are distinct
-                wrongOption2 = generateFakeSongName();
+        const generateWrongOptions = async () => {
+            const wrongOptions = [];
+            for (let i = 0; i < 2; i++) {
+                const wrongTrackName = await getRandomTrackId();
+                wrongOptions.push(wrongTrackName);
             }
-            return [wrongOption1, wrongOption2];
-        };
-
-        const generateFakeSongName = () => {
-            // Generate a random fake song name with diverse variations
-            const baseWords = ['Mystic', 'Eternal', 'Sonic', 'Harmonic', 'Whispering', 'Rhythmic'];
-            const prefixes = ['Enchanted', 'Celestial', 'Serenading', 'Astral', 'Melodic', 'Epic'];
-            const suffixes = ['Symphony', 'Melody', 'Harmony', 'Vibration', 'Sonata', 'Rhythm'];
-
-            const randomBase = baseWords[Math.floor(Math.random() * baseWords.length)];
-            const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-            const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-
-            const variations = [
-                `${randomBase} ${randomSuffix}`,
-                `${randomPrefix} ${randomBase}`,
-                `${randomBase} ${randomSuffix}`,
-                `${randomBase} & ${randomPrefix}`,
-                `${randomBase}'s ${randomSuffix}`
-            ];
-
-            return variations[Math.floor(Math.random() * variations.length)];
+            return wrongOptions;
         };
 
         const shuffleArray = (array) => {
@@ -258,6 +273,11 @@
 
         const resetTimer = () => {
             clearInterval(timer);
+        };
+
+        const goBack = () => {
+            // Navigate back to the desired local file
+            window.location.href = desiredBackURL;
         };
     </script>
 </body>
