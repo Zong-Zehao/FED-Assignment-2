@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,8 +28,10 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Random Song Preview</h1>
+    <p>Points: <span id="points">0</span></p>
     <button onclick="getRandomSong()">Get Random Song</button>
     <button onclick="skipSong()">Skip</button>
     <div id="result"></div>
@@ -38,6 +41,9 @@
         let fetchingSong = false;
         let audioPlayer;
         let currentTrackId;
+        let points = 0;
+        let timer;
+        let startTime; // Variable to store the start time when displaying options
 
         const getRandomTrackId = async () => {
             const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/3155776842'; // Example playlist
@@ -108,15 +114,18 @@
             `).join('');
 
             audioPlayer = document.getElementById('audioPlayer');
+            startTimer();
+            startTime = new Date(); // Record the start time when displaying options
         };
 
         const getRandomSong = async () => {
             if (!fetchingSong) {
                 fetchingSong = true;
                 try {
+                    resetTimer();
                     const randomTrackId = await getRandomTrackId();
                     const { title, preview } = await getTrackDetails(randomTrackId);
-                    console.log('Fetched Song:', JSON.stringify(title));  // Log the fetched song title
+                    console.log('Fetched Song:', JSON.stringify(title)); // Log the fetched song title
                     const wrongOptions = generateWrongOptions(title);
                     const allOptions = shuffleArray([...wrongOptions, title]);
                     displayResult(title, preview, allOptions);
@@ -129,6 +138,7 @@
         };
 
         const skipSong = () => {
+            resetTimer();
             getRandomSong();
         };
 
@@ -173,18 +183,41 @@
 
         const checkAnswer = async (selectedOption, correctAnswer) => {
             const resultDiv = document.getElementById('result');
+            const pointsSpan = document.getElementById('points');
             const sanitizedSelectedOption = encodeURIComponent(selectedOption);
             const sanitizedCorrectAnswer = encodeURIComponent(correctAnswer);
 
+            const endTime = new Date(); // Record the end time when the user makes a selection
+            const timeDifferenceInSeconds = Math.floor((endTime - startTime) / 1000);
+
             if (sanitizedSelectedOption === sanitizedCorrectAnswer) {
-                resultDiv.innerHTML += '<p style="color: green;">Correct!</p>';
+                points += 30; // Add 30 points for correct answer
+                resultDiv.innerHTML += `<p style="color: green;">Correct! Earned 30 points.</p>`;
             } else {
-                resultDiv.innerHTML += '<p style="color: red;">Wrong!</p>';
+                // Subtract the time taken from the points for wrong answers
+                points = Math.max(0, points - timeDifferenceInSeconds);
+                resultDiv.innerHTML += `<p style="color: red;">Wrong! Deducted ${timeDifferenceInSeconds} points.</p>`;
             }
 
+            pointsSpan.textContent = points;
+            resetTimer();
             // Proceed to the next song
             getRandomSong();
         };
+
+        const startTimer = () => {
+            timer = setInterval(() => {
+                if (points > 0) {
+                    points--;
+                    document.getElementById('points').textContent = points;
+                }
+            }, 1000);
+        };
+
+        const resetTimer = () => {
+            clearInterval(timer);
+        };
     </script>
 </body>
+
 </html>
