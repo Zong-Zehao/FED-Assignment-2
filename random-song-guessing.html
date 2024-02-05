@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Song Guessing Game</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body {
+        .content {
             font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #f4f4f4;
@@ -71,15 +74,64 @@
 </head>
 
 <body>
-    <h1>Random Song Guessing Game</h1>
-    <p>Points: <span id="points">30</span></p>
-    <p>Time: <span id="timer">30 Sec</span></p>
-    <button id="getRandomSongBtn" onclick="getRandomSong()">Get Random Song</button>
-    <button id="skipSongBtn" onclick="skipSong()">Skip</button>
-    <div id="result"></div>
-    <div class="options" id="options"></div>
-    <button id="retryButton" onclick="retryGame()" style="display: none;">Retry</button>
-    <button id="backButton" onclick="goBack()">Back</button>
+    <div class="p-3 m-0 border-0 bd-example m-0 border-0">
+        <nav class="navbar navbar-dark bg-dark fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Offcanvas dark navbar</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                  <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Dark offcanvas</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <form class="d-flex mt-3" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-success" type="submit">Search</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </nav>
+          
+          <!-- End Example Code -->
+    </div>
+
+    <div class="content">
+        <h1>Random Song Guessing Game</h1>
+        <p>Points: <span id="points">30</span></p>
+        <p>Time: <span id="timer">30 Sec</span></p>
+        <button id="getRandomSongBtn" onclick="getRandomSong()">Get Random Song</button>
+        <button id="skipSongBtn" onclick="skipSong()">Skip</button>
+        <div id="result"></div>
+        <div class="options" id="options"></div>
+        <button id="retryButton" onclick="retryGame()" style="display: none;">Retry</button>
+        <button id="backButton" onclick="goBack()">Back</button>
+    
+    </div>
 
     <script>
         let fetchingSong = false;
@@ -93,7 +145,7 @@
         let currentTime = initialTime;
 
         const getRandomTrackId = async () => {
-            const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/7785373782';
+            const playlistUrl = 'https://deezerdevs-deezer.p.rapidapi.com/playlist/2018572642';
             const playlistOptions = {
                 method: 'GET',
                 headers: {
@@ -305,21 +357,32 @@
         };
 
         const stopGameAndCongratulate = () => {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `<p style="color: green;">Congratulations, you've won!</p>`;
-            stopGame();
-            document.getElementById('retryButton').style.display = 'block';
-            document.getElementById('getRandomSongBtn').disabled = true;
-            document.getElementById('skipSongBtn').disabled = true;
+            if (points >= 600) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<p style="color: green;">Congratulations, you've won!</p>`;
+                stopGame();
+                document.getElementById('retryButton').style.display = 'block';
+                document.getElementById('getRandomSongBtn').disabled = true;
+                document.getElementById('skipSongBtn').disabled = true;
+            }
         };
 
         const stopGameAndShowLoss = () => {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `<p style="color: red;">Too Bad, You've Lost. Try Again?</p>`;
-            stopGame();
-            document.getElementById('retryButton').style.display = 'block';
-            document.getElementById('getRandomSongBtn').disabled = true;
-            document.getElementById('skipSongBtn').disabled = true;
+            if (points <= 0) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<p style="color: red;">Too Bad, You're out of points. Try Again?</p>`;
+                stopGame();
+                document.getElementById('retryButton').style.display = 'block';
+                document.getElementById('getRandomSongBtn').disabled = true;
+                document.getElementById('skipSongBtn').disabled = true;
+            } else {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `<p style="color: red;">Oh no, you are SLOW. Try again?</p>`;
+                stopGame();
+                document.getElementById('retryButton').style.display = 'block';
+                document.getElementById('getRandomSongBtn').disabled = true;
+                document.getElementById('skipSongBtn').disabled = true;
+            }
         };
 
         const updateTimerDisplay = () => {
