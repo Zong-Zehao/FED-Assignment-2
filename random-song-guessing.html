@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <style>
         .content {
             font-family: 'Arial', sans-serif;
@@ -20,6 +21,13 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            margin: 0;
+            background-image: url('https://opengameart.org/sites/default/files/background0.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;        
+
         }
 
         header {
@@ -136,19 +144,18 @@
             </div>
         </nav>
     </div>
-
     <div class="content">
         <h1>Random Song Guessing Game</h1>
+        <dotlottie-player src="https://lottie.host/cc1bd6c3-9ae9-4f6d-8329-cef6cd6438fe/w5qswPI4pD.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
         <p>Points: <span id="points">30</span></p>
         <p>Time: <span id="timer">30 Sec</span></p>
-        <button id="getRandomSongBtn" onclick="getRandomSong()">Get Random Song</button>
+        <button id="getRandomSongBtn" onclick="getRandomSong()">Start</button>
         <button id="skipSongBtn" onclick="skipSong()">Skip</button>
         <div id="result"></div>
         <div class="options" id="options"></div>
         <button id="retryButton" onclick="retryGame()" style="display: none;">Retry</button>
         <button id="backButton" onclick="goBack()">Back</button>
-    
-    </div>
+    </div>  
 
     <script>
         let fetchingSong = false;
