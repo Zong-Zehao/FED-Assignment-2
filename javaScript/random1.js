@@ -4,7 +4,7 @@ let previousTrackId;
 let points = 30;
 let timer;
 let startTime;
-let desiredBackURL = "randomListing.html";
+let desiredBackURL = "listOfRandom.html";
 const initialTime = 30;
 let currentTime = initialTime;
 
