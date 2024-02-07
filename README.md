@@ -7,27 +7,27 @@ https://www.figma.com/file/gWSCXpg56W281c1GcI8ALy/Untitled?type=design&node-id=0
 ## Features
 
 ### Existing Features
-Feature 1: The order of songs is randomized preventing users from memorizing the sequence
-Feature 2: A message is displayed upon the user reaching 200 points
-Feature 3: A message is displayed upon the user having 0 points left
-Feature 4: A separate message from feature 3 is displayed upon the user running out of time
-Feature 5: The options are locked from the user after the game is over
-Feature 6: A retry button appears if the user loses
-Feature 7: A play again button appears if the user wins
-Feature 8: Respective messages for getting the answer correct/wrong are displayed
-Feature 10: For every correct guess, the timer is reset
-Feature 11: A point is deducted every second the user takes to guess.
+- Feature 1: The order of songs is randomized preventing users from memorizing the sequence
+- Feature 2: A message is displayed upon the user reaching 200 points
+- Feature 3: A message is displayed upon the user having 0 points left
+- Feature 4: A separate message from feature 3 is displayed upon the user running out of time
+- Feature 5: The options are locked from the user after the game is over
+- Feature 6: A retry button appears if the user loses
+- Feature 7: A play again button appears if the user wins
+- Feature 8: Respective messages for getting the answer correct/wrong are displayed
+- Feature 10: For every correct guess, the timer is reset
+- Feature 11: A point is deducted every second the user takes to guess.
 On top of that if the user guesses wrongly, the points deducted is the equivalent of the time taken to select the option (e.g 4 seconds taking, -4 points for getting the question wrong)
-Feature 12: Start button and Skip button
-Feature 13: Back button to return to menu
-Feature 14: Volume slider as well as pause/play button for audio
-Feature 15: Sidebar which allows users to go to the home page or select their desired gamemode using the dropdown menu
-Feature 16: Playlist pages for the user to select which playlist for the specific gamemode they would like to use
+- Feature 12: Start button and Skip button
+- Feature 13: Back button to return to menu
+- Feature 14: Volume slider as well as pause/play button for audio
+- Feature 15: Sidebar which allows users to go to the home page or select their desired gamemode using the dropdown menu
+- Feature 16: Playlist pages for the user to select which playlist for the specific gamemode they would like to use
 
 ### Features Left to Implement
--Account creation so that users can save highscores, and appear on global leaderboards
--Allow users to create thier own playlists and options to enhance user participation
--Create new gamemodes such as endless mode that lets users play until they feel like stopping or a mode where they have a certain amount of lives
+- Account creation so that users can save highscores, and appear on global leaderboards
+- Allow users to create thier own playlists and options to enhance user participation
+- Create new gamemodes such as endless mode that lets users play until they feel like stopping or a mode where they have a certain amount of lives
 ## Technologies Used
 Languages:
 1. HTML
@@ -37,30 +37,30 @@ Languages:
     -improved css
 ## Testing
 1. Playlists
-i. Choose any gamemode and go to the playlists page
-ii. Try each of the playlists by selecting them and seeing if they work
-iii. Repeat for every gamemode and every playlist
+    1. Choose any gamemode and go to the playlists page
+    2. Try each of the playlists by selecting them and seeing if they work
+    3. Repeat for every gamemode and every playlist
 2. Point System
-i. Start a game in any gamemode
-ii. Click Start
-iii. Check if the point counter and timer start decreasing(by 1 per second)
-iv. Let the timer run out
-v. Get the answers wrong and run out of points
-vi. Get the answers right and reach 200 points
-vii. for the iv,v and vi, ensure the correct messages are displayed for each case
+    1. Start a game in any gamemode
+    2. Click Start
+    3. Check if the point counter and timer start decreasing(by 1 per second)
+    4. Let the timer run out
+    5. Get the answers wrong and run out of points
+    6. Get the answers right and reach 200 points
+    7. for the iv,v and vi, ensure the correct messages are displayed for each case
 3. Game Mechanics and Relevant Buttons
-i. Start a game
-ii. Ensure that the Start button is functioning
-iii. Ensure that all 3 option buttons per song are clickable
-iv. Ensure that the skip button is fucntioning
+    1. Start a game
+    2. Ensure that the Start button is functioning
+    3. Ensure that all 3 option buttons per song are clickable
+    4. Ensure that the skip button is fucntioning
 4. Miscellaneous
-i. Upon losing a game ensure a retry button appears and is functioning
-ii. Upon winning a game enusre a try again button appears and is functioning
-iii. For both cases, ensure the back button is working
+    1. Upon losing a game ensure a retry button appears and is functioning
+    2. Upon winning a game enusre a try again button appears and is functioning
+    3. For both cases, ensure the back button is working
 5. Sidebar
-i. Open sidebar
-ii. Ensure menu button directs users to menu upon clicking
-iii. Ensure respective buttons for each gamemode are also functioning
+    1. Open sidebar
+    2. Ensure menu button directs users to menu upon clicking
+    3. Ensure respective buttons for each gamemode are also functioning
 
 ## Credits
 
