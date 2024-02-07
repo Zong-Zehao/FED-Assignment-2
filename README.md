@@ -34,7 +34,7 @@ Languages:
 2. CSS
 3. JavaScript
 4. [Bootstrap](https://getbootstrap.com/) 
-    -improved css
+    - improved css
 ## Testing
 1. Playlists
     1. Choose any gamemode and go to the playlists page
