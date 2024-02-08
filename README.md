@@ -125,70 +125,101 @@ https://testset.io/wp-content/uploads/2020/07/Beabadoobee-Parallax.jpg
 
 Billie Eilish
 https://static.billboard.com/files/2020/11/Billie-Eilish-VF-Oscar-Party-2020-Billboard-1548-1604945822-compressed.jpg
+
 black pink
 https://www.rollingstone.com/wp-content/uploads/2019/04/blackpink-album-review.jpg
+
 Brent Faiyaz
 https://cdn.vox-cdn.com/thumbor/ieKJSJuS0V7eYU6QELaiOwyb7HI=/0x0:5760x3840/2420x1613/filters:focal(2420x1460:3340x2380)/cdn.vox-cdn.com/uploads/chorus_image/image/68738422/image1.7.jpeg
+
 Bruno mars
 https://www.cheatsheet.com/wp-content/uploads/2021/03/Bruno-Mars.jpg
+
 BTS
 https://0.soompi.io/wp-content/uploads/2017/02/02070401/bts-group-3.jpg
+
 cardi b
 https://assets.capitalxtra.com/2018/20/cardi-b-coachella--1526980452.jpg
+
 charli puth
 https://images3.alphacoders.com/908/908618.jpg
+
 coldplay
 https://www.rollingstone.com/wp-content/uploads/2018/06/rs-184033-53049468.jpg
+
 Daniel Caesar
 https://s3-ap-southeast-2.amazonaws.com/savetonight/2018/03/daniel_caesar_the_met_markus_ravik_0318-005.jpg
+
 doja cat 
 https://www.nawpic.com/media/2020/doja-cat-nawpic-10.jpg
+
 drake
 https://townsquare.media/site/812/files/2021/07/attachment-drake1.jpg?w=1200
+
 dua lipa
 https://static.universal-music.de/asset_new/401094/195/view/dua-lipa-2016.jpg
+
 ed Sheeran
 https://media.distractify.com/brand-img/NqvxqpH7C/0x0/gettyimages-800829628-1567012061419.jpg
+
 harry styles
-https://people.com/thmb/dl_FwYnNl6PvuDgEFzwnJiHWroA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(659x69:661x71)/harry-styles-grammys-tout-020523-689a9fd053194ca693c1f3bac13e4fdb.jpg
+https://people.com/thmb/dl_FwYnNl6PvuDgEFzwnJiHWroA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(659x69:661x71)/harry-styles-grammys-tout-020523-
+689a9fd053194ca693c1f3bac13e4fdb.jpg
+
 
 ice spice
 https://townsquare.media/site/812/files/2023/05/attachment-ice-spice1.jpg
+
 imagine dragons:
 https://d.newsweek.com/en/full/1204196/imagine-dragons-main-eric-ray-davidson.jpg
+
 Jungkook
 https://static.asiachan.com/Jungkook.full.121931.jpg
+
 kanye west
 https://www.bostonherald.com/wp-content/uploads/2020/06/Gap-Kanye_West_72749-2.jpg?w=1080
+
 laufey
 https://www.celebrityleader.com/wp-content/uploads/2021/05/Laufey_Photos_Press-Photo_Film-3-PC_-Blythe-Thomasc-1536x1023.jpg
+
 lil tecca
 https://static.billboard.com/files/media/01-Lil-Tecca-press-by-ShotByCones-2019-billboard-1548-compressed.jpg
+
 lana del rey
 https://filmdaily.co/wp-content/uploads/2021/01/lana-del-rey-03.jpg
+
 mitski
 https://www.bkmag.com/wp-content/uploads/2016/05/Mitski.jpg
+
 newjeans
 https://wallpapercave.com/wp/wp11772419.jpg
+
 nicki minaj
-https://cdn.vox-cdn.com/thumbor/t9tIGMXYsj5f0u1Jk20QdQ7Vdpc=/0x0:1920x1080/1200x800/filters:focal(766x492:1072x798)/cdn.vox-cdn.com/uploads/chorus_image/image/66524401/Nicki_Minaj_1_e1537459995400_1920x1080.0.jpg
+https://cdn.vox-cdn.com/thumbor/t9tIGMXYsj5f0u1Jk20QdQ7Vdpc=/0x0:1920x1080/1200x800/filters:focal(766x492:1072x798)/cdn.vox-
+cdn.com/uploads/chorus_image/image/66524401/Nicki_Minaj_1_e1537459995400_1920x1080.0.jpg
+
 
 taylor swift
 https://hdqwalls.com/wallpapers/taylor-swift-2018-tx.jpg
+
 the weeknd
 https://biographytoday.org/wp-content/uploads/2019/03/the-weeknd_151364.jpeg
+
 justin Bieber
 https://townsquare.media/site/252/files/2015/08/justin-bieber-wdym.jpg?w=1200&h=0&zc=1&s=0&a=t&q=89
+
 yeat
 https://www.enwallpaper.com/wp-content/uploads/2023/02/Yeat-1645568576.jpg
+
 twenty one pilots
 https://thegauntlet.ca/wp-content/uploads/2021/06/image.jpeg
+
 arctic monkeys
 https://townsquare.media/site/443/files/2017/09/arcticMonkeys.jpg
+
 steve lacy:
-https://media1.popsugar-assets.com/files/thumbor/K9bWNYj5f808HvqkJ8sCDzDiaaU/fit-in/1024x1024/filters:format_auto-!!-:strip_icc-!!-/2019/12/26/847/n/1922283/6cc320375e050806a51916.68020174_/i/best-steve-lacy-songs.jpg
-
-
+https://media1.popsugar-assets.com/files/thumbor/K9bWNYj5f808HvqkJ8sCDzDiaaU/fit-
+in/1024x1024/filters:format_auto-!!-:strip_icc-!!-/2019/12/26/847/n/1922283/6cc320375e050806a51916.68020174_/i/best-steve-lacy-songs.jpg
 
 ### website background images:
 https://opengameart.org/sites/default/files/Starry%20night%20Image.png
