@@ -101,6 +101,8 @@ https://zong-zehao.github.io/FED-Assignment-2/
 
 
 ### Media
+Demo video:
+https://drive.google.com/file/d/1JxR7tiSTs0y6-T0IqGAyPskftzFv9uYk/view?usp=sharing
 
 ### Link for all the pictures:
 Pop picture
