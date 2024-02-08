@@ -95,6 +95,11 @@ We did not copy / refer to any web templates. All of the design made in the webs
 These are the bootstrap links:
 https://getbootstrap.com/docs/5.3/components/navbar/ (NAVBAR)
 https://getbootstrap.com/docs/5.3/components/card/ (CARD)
+
+This is the link to the website hosted on github
+https://zong-zehao.github.io/FED-Assignment-2/
+
+
 ### Media
 
 ### Link for all the pictures:
